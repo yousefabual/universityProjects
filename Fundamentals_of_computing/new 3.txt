@@ -1,0 +1,529 @@
+# include<stdio.h>
+# include<string.h>
+# include "foc_fa22.h"
+# include <stdlib.h>
+# include <time.h>
+
+void StartGuessTheNumberGame();
+
+void StartHangmanGame();
+
+int main()
+
+{//start of main
+
+      int option;
+      char first[12];
+      printf("Please inter your first name\n");//ask the user for name
+      scanf(" %s",first);//inter first name
+      printf("welcome %s !\n",first);
+      do{//start of the do while loop...
+      printf("Please inter the number of the game you wish to play, or choose Exit.\n");
+       printf(" 1. Guess the number.\n");
+       printf(" 2. Hangman.\n");
+       printf(" 3. Exit.\n");
+       
+     
+     scanf(" %d",&option);
+   
+switch(option)
+
+{//Start of switch
+   
+   //start of cases
+            case 1:
+            
+              StartGuessTheNumberGame(); //to enter Guess The Number Game function
+            
+            break;
+            
+            case 2:
+            
+              StartHangmanGame();  //to enter Hangman Game function
+              
+            break;
+             
+            case 3:
+            // exit 
+            break;
+                        
+            default: printf("Invalid choice.\n");
+   //End of cases   
+         
+}//End of switch
+
+}while(option!=3);//end of the do while loop
+     
+return 0;
+
+}//End of main
+
+
+
+void StartGuessTheNumberGame()
+
+{ //Start of function
+
+  int secnum;
+  int low=1;     //determine the minimum value
+  int high=10000;//determine the maximum value
+  int mid;        
+  int option;
+  int counter=0;
+  
+  printf("Enter a secret number between %d and %d \n",low,high);
+  scanf(" %d",&secnum);//letting the user enter a secret number that the computer doesn't read
+  
+  do{ //start of the do while loop
+  mid = (low + high)/2;
+  counter+=1;// this counter is made to determine how many times the computer had guessed
+  printf("My guess is: %d\n",mid);//changing the medium number  depending on the user choice
+  printf("please choose one of the following 3 options:\n");
+       printf(" 1. My Guess is correct.\n");
+       printf(" 2. The secret number is larger than %d.\n",mid);
+       printf(" 3. The secret number is smaller than %d.\n",mid);
+    
+       scanf(" %d",&option);//waiting for the user to enter an option
+       
+switch(option)
+
+{ //start of the switch
+
+            case 1:
+            printf(" the secret number is found\n");//the game ends here
+            break;
+            
+            case 2:
+              low=mid+1; //changing the minimum value
+            break;
+
+            case 3:
+              high=mid-1; //changing the maximum value
+            break;
+
+      default: printf("Wrong option.\n");
+      
+} //End of switch.
+
+}while(option!=1); //End of the do while loop.
+
+    counter=counter*10; 
+    int b;
+    b=150-counter;
+    
+    int x[150][150];
+    
+    for(int i=0;i<150;i++)
+    {
+    for(int j=0;j<150;j++)
+    {
+    x[i][j]=255;
+    if(i<150 && i>b && j>65 && j<85) // determine the dimensions of the image
+    x[i][j]=0;
+    }
+    }
+    showArray(150,150,x);
+    
+              
+}  //End of function "StartGuessTheNumberGame".
+
+
+
+void StartHangmanGame()
+
+{//start of function StartHangmanGame
+
+int option;
+FILE *intfile;//pointer to enter one of the files depending on the users option
+char category[20];
+int size;
+int input_status;
+char data_list[20];
+int attempts = 5;
+char guess;
+int counter=0;// to choose a random option
+int flag;
+char guess_word[10]={"__________"};
+
+printf("Choose a category :\n");
+printf("1. Food.\n");
+printf("2. Objects.\n");
+printf("3. Names.\n");
+printf("4. colors.\n");
+
+scanf(" %d",&option);//waiting for the user to enter an option
+            srand(time(NULL));
+            int x=rand() % 15;
+switch(option)
+
+{ //start of the switch
+
+            case 1://food category
+            
+          
+           intfile= fopen("food.txt", "r");//read what is inside the file
+
+          if(intfile == NULL)
+           {
+             printf("cannot open food.txt");
+           }
+       else
+       {//start of else 1
+        input_status=fscanf(intfile,"%s",data_list);
+
+       while(input_status==1)
+       { //start of while 1
+       
+         counter++;
+         input_status=fscanf(intfile,"%s",data_list);
+         
+          if (counter==x)
+          { //start of if **
+            size=strlen(data_list);
+
+
+             while (attempts != 0)
+               { //start of while 2
+
+               printf("your word so far is ");
+              for(int i=0;i<size;i++)
+                {
+                    printf("%c ", guess_word[i]);
+                }
+
+               printf("\nYou have %d remaining attempts\n",attempts);
+
+                flag=0;
+                
+               printf("\nEnter your guess\n");
+              scanf(" %c",&guess);
+
+                 for(int i=0;i<size;i++)
+                    {
+                 if (guess==data_list[i])
+                    {
+                   guess_word[i]=guess;
+                   flag++;
+                    }
+   
+                    }
+                  
+                 
+              
+               if ( flag == 0 )
+                {
+                 attempts -=1;
+               if( attempts!=0)
+                 {
+                 printf("not quite! try again!\n");
+                 }
+                }
+                    
+                  else if (strncmp(data_list, guess_word,size) != 0)
+                     {
+                        printf("Correct! Keep going!\n");
+                     }
+                     
+
+       if (strncmp(data_list, guess_word,size) == 0)// becuse they have diifrent size
+        {
+            printf("Congratulations! You found the word!\n");
+       break;
+       }
+      if (attempts==0 )
+       {
+         printf("Hard luck! You were not able to find the word. :( \n");
+      break;
+       }
+
+
+
+}//end of while 2
+
+
+
+}//end of if **
+}//end of while 1
+}//end of else
+
+        fclose(intfile);   //close the food.txt file
+         
+            break;//end food category
+            
+            case 2:// objects category
+            
+              intfile= fopen("objects.txt", "r");//read what is inside the file
+
+          if(intfile == NULL)
+           {
+             printf("cannot open objects.txt");
+           }
+       else
+       {//start of else 1
+        input_status=fscanf(intfile,"%s",data_list);//read inside the file
+
+       while(input_status==1)
+       { //start of while 1
+       
+         counter++;
+         input_status=fscanf(intfile,"%s",data_list);
+         
+          if (counter==x)
+          { //start of if **
+            size=strlen(data_list);
+
+
+             while (attempts != 0)
+               { //start of while 2
+
+               printf("your word so far is ");
+              for(int i=0;i<size;i++)
+                {
+                    printf("%c ", guess_word[i]);
+                }
+
+               printf("\nYou have %d remaining attempts\n",attempts);
+
+                flag=0;
+               printf("\nEnter your guess\n");
+              scanf(" %c",&guess);
+
+                 for(int i=0;i<size;i++)
+                    {
+                 if (guess==data_list[i])
+                    {
+                   guess_word[i]=guess;
+                   flag++;
+                    }
+   
+                    }
+       
+                 if (flag==0)//for the wrong option
+                {
+                 attempts -=1;
+                 if( attempts!=0)
+                 {
+                 printf("not quite! try again!\n");
+                 }
+                  }
+    
+                  else if (strncmp(data_list, guess_word,size) != 0)
+   
+                   printf("Correct! Keep going!\n");
+
+
+
+       if (strncmp(data_list, guess_word,size) == 0)// if the word alphabets are the same number as the size 
+        {
+            printf("Congratulations! You found the word!\n");
+       break;
+       }
+      else if (attempts==0)
+       {
+         printf("Hard luck! You were not able to find the word. :(\n");
+      //break;
+       }
+
+
+
+}//end of while 2
+
+
+
+}//end of if **
+}//end of while 1
+}//end of else
+
+        fclose(intfile);   //close the food.txt file
+         
+           
+        
+            break;// end objects category
+               
+            case 3:// names category
+              intfile= fopen("names.txt", "r");//read what is inside the file
+
+          if(intfile == NULL)
+           {
+             printf("cannot open names.txt");
+           }
+       else
+       {//start of else 1
+        input_status=fscanf(intfile,"%s",data_list);
+
+       while(input_status==1)
+       { //start of while 1
+       
+         counter++;
+         input_status=fscanf(intfile,"%s",data_list);
+         
+          if (counter==x)
+          { //start of if **
+            size=strlen(data_list);
+
+
+             while (attempts != 0)
+               { //start of while 2
+
+               printf("your word so far is ");
+              for(int i=0;i<size;i++)
+                {
+                    printf("%c ", guess_word[i]);
+                }
+
+               printf("\nYou have %d remaining attempts\n",attempts);
+
+                flag=0;
+               printf("\nEnter your guess\n");
+              scanf(" %c",&guess);
+
+                 for(int i=0;i<size;i++)
+                    {
+                 if (guess==data_list[i])
+                    {
+                   guess_word[i]=guess;
+                   flag++;
+                    }
+   
+                    }
+       
+                 if (flag==0)
+                {
+                 attempts -=1;
+                 if( attempts!=0)
+                 {
+                 printf("not quite! try again!\n");
+                 }
+                  }
+    
+                  else if (strncmp(data_list, guess_word,size) != 0)
+   
+                   printf("Correct! Keep going!\n");
+
+
+
+       if (strncmp(data_list, guess_word,size) == 0)// becuse they have diifrent size
+        {
+            printf("Congratulations! You found the word!\n");
+       break;
+       }
+      else if (attempts==0)
+       {
+         printf("Hard luck! You were not able to find the word. :(\n");
+      //break;
+       }
+
+
+
+}//end of while 2
+
+
+
+}//end of if **
+}//end of while 1
+}//end of else
+
+        fclose(intfile);   //close the food.txt file
+            
+           
+            break;// end names category
+            
+            case 4:// colors category
+            
+            
+            intfile= fopen("colors.txt", "r");//read what is inside the file
+
+          if(intfile == NULL)
+           {
+             printf("cannot open food.txt");
+           }
+       else
+       {//start of else 1
+        input_status=fscanf(intfile,"%s",data_list);
+
+       while(input_status==1)
+       { //start of while 1
+       
+         counter++;
+         input_status=fscanf(intfile,"%s",data_list);
+         
+          if (counter==x)
+          { //start of if **
+            size=strlen(data_list);
+
+
+             while (attempts != 0)
+               { //start of while 2
+
+               printf("your word so far is ");
+              for(int i=0;i<size;i++)
+                {
+                    printf("%c ", guess_word[i]);
+                }
+
+               printf("\nYou have %d remaining attempts\n",attempts);
+
+                flag=0;
+               printf("\nEnter your guess\n");
+              scanf(" %c",&guess);
+
+                 for(int i=0;i<size;i++)
+                    {
+                 if (guess==data_list[i])
+                    {
+                   guess_word[i]=guess;
+                   flag++;
+                    }
+   
+                    }
+       
+                 if (flag==0)
+                {
+                 attempts -=1;
+                if( attempts!=0)
+                 {
+                 printf("not quite! try again!\n");
+                 }
+                  }
+    
+                  else if (strncmp(data_list, guess_word,size) != 0)
+   
+                   printf("Correct! Keep going!\n");
+
+
+
+       if (strncmp(data_list, guess_word,size) == 0)// becuse they have diifrent size
+        {
+            printf("Congratulations! You found the word!\n");
+       break;
+       }
+      else if (attempts==0)
+       {
+         printf("Hard luck! You were not able to find the word. :(\n");
+      //break;
+       }
+
+
+
+}//end of while 2
+
+
+
+}//end of if **
+}//end of while 1
+}//end of else
+
+        fclose(intfile);   //close the food.txt file
+            break;// end colors category
+
+      default: printf("Wrong option.\n");
+      
+} //End of switch.
+
+
+
+}// end of function StartHangmanGame
+
+
+
+

@@ -1,0 +1,161 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <time.h>
+int main()
+
+{
+
+
+
+int option;
+FILE *intfile;
+char category[20];
+int size;
+int input_status;
+char data_list[20];
+int attempts = 5;
+char guess;
+int counter=0;
+int couter2=0;
+int flag;
+char word[30];
+char guess_word[15]={"_______________"};
+intfile= fopen("food.txt", "r");
+            
+              if(intfile == NULL)
+              {
+              printf("cannot open food.txt");
+              }
+              else
+              {//start of else 1
+              input_status=fscanf(intfile,"%s",data_list);
+            
+             while(input_status==1)
+              
+              { //start of while 1
+              
+              counter++;
+              srand(time(NULL));
+              int x=rand() % 15;
+              
+              input_status=fscanf(intfile,"%s",data_list);
+                size=strlen(data_list);
+              if (counter==x)
+              
+              { //start of if **
+              printf("your word so far is ");
+              
+            for(int i=0;i<size;i++)
+              {               
+               printf("%c", guess_word[i]);
+              }
+             
+              printf("\nYou have %d remaining attempts\n",attempts);
+              //word[30]=data_list;
+
+              while (attempts != 0)
+              { //start of while 2
+                flag=0;
+                printf("\nEnter your guess\n");
+                scanf("%c",&guess);
+                for(int i=0;i<size;i++)
+                {
+                if (guess==data_list[i])
+                {
+                   guess_word[i]=guess;
+                   flag++;
+                }
+                }
+              if (flag==0)
+              {
+              attempts -=1;
+              
+              if (attempts==4)
+              {
+              printf("NOt quite! try again!\n");
+               printf("The word so far is ");
+              for (int i=0;i<size;i++)
+              {
+               printf("%c", guess_word[i]);
+              }          
+              printf("you have %d remaining attempts\n", attempts);   
+              //break;     
+              }
+              
+            
+              else if (attempts==3)
+              {
+              printf("NOt quite! try again!\n");
+               printf("The word so far is ");
+              for (int i=0;i<size;i++)
+              {
+               printf("%c", guess_word[i]);
+              }          
+              printf("you have %d remaining attempts\n", attempts);  
+               //break;      
+              }
+              
+               else if (attempts==2)
+              {
+              printf("NOt quite! try again!\n");
+               printf("The word so far is ");
+              for (int i=0;i<size;i++)
+              {
+               printf("%c", guess_word[i]);
+              }          
+              printf("you have %d remaining attempts\n", attempts);  
+               //break;      
+              }
+              
+               else if (attempts==1)
+              {
+              printf("NOt quite! try again!\n");
+               printf("The word so far is ");
+              for (int i=0;i<size;i++)
+              {
+               printf("%c", guess_word[i]);
+              }          
+              printf("you have %d remaining attempts\n", attempts); 
+               //break;       
+              }
+              
+               else if (attempts==0)
+              {
+              printf("Hard luck! You were not able to find the word. :(\n");
+               //break;
+              }
+               }   
+            else
+            { //start of else **
+            if(strcmp(data_list,guess_word)==0)
+            {         
+            printf("Congratulations! You found the word!\n");
+            //break;
+            }
+           else
+           {
+           printf("Correct! Keep going!\n");
+           printf("The word so far is ");
+              for (int i=0;i<size;i++)
+              {
+               printf("%c", guess_word[i]);
+              }          
+              printf("you have %d remaining attempts\n", attempts);        
+              }
+     } //end of else **    
+    }//end of while 2
+    
+    }//end of if **
+    }//end of while 1
+    }//end of else
+    
+     return 0;
+}
+
+
+
+
+
+
+          
